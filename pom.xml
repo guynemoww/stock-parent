@@ -1,0 +1,128 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cn.tcht</groupId>
+	<artifactId>stock-parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<modules>
+		<module>stock-commons</module>
+		<module>stock-facade</module>
+		<module>stock-biz</module>
+		<module>stock-provider</module>
+		<module>stock-dao-model</module>
+		<module>stock-dao-service</module>
+		<module>stock-trade-consumer</module>
+		<module>stock-mq</module>
+	</modules>
+
+	<distributionManagement>
+		<repository>
+			<id>nexus</id>
+			<name>stock-release</name>
+			<url>http://localhost:8081/repository/stock-release/</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus</id>
+			<name>stock-snapshot</name>
+			<url>http://localhost:8081/repository/stock-snapshot/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<build>
+		<!-- dubbo.properties可以读取到pom中profile的值 -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/script</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<!--源码的Java版本 -->
+					<source>1.8</source>
+					<!--运行环境的Java版本 -->
+					<target>1.8</target>
+					<encoding>UTF8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<!-- dubbo.properties读pom时报编码错误，使用该插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<!-- 配置环境 -->
+	<profiles>
+		<!-- 测试环境 -->
+		<profile>
+			<id>test</id>
+			<properties>
+				<dyn.dubbo.protocol.port>20880</dyn.dubbo.protocol.port>
+				<dyn.zookeeper.address>zookeeper://localhost:2181</dyn.zookeeper.address>
+				<dyn.dubbo.own.version>26.11t</dyn.dubbo.own.version>
+			</properties>
+		</profile>
+		<!-- 开发环境 -->
+		<profile>
+			<id>dev</id>
+			<properties>
+				<dyn.dubbo.protocol.port>20885</dyn.dubbo.protocol.port>
+				<dyn.zookeeper.address>zookeeper://localhost:2181</dyn.zookeeper.address>
+				<dyn.dubbo.own.version>26.11d</dyn.dubbo.own.version>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<!-- 生产环境 -->
+		<profile>
+			<id>prod</id>
+			<properties>
+				<dyn.dubbo.protocol.port>50661</dyn.dubbo.protocol.port>
+				<dyn.zookeeper.address>zookeeper://47.105.102.7:2181</dyn.zookeeper.address>
+				<dyn.dubbo.own.version>26.11p</dyn.dubbo.own.version>
+			</properties>
+		</profile>
+	</profiles>
+
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-test -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>4.3.18.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+
+</project>

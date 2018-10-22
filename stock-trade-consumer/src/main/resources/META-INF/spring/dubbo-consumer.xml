@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	   http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://code.alibabatech.com/schema/dubbo 
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+       http://www.springframework.org/schema/tx 
+       http://www.springframework.org/schema/tx/spring-tx.xsd"
+       >
+       
+    <!-- 配置可参考 http://dubbo.io/User+Guide-zh.htm -->
+    <!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+    <dubbo:application name="stock-consumer" owner="stock-consumer" />
+
+    <!-- 定义 zookeeper 注册中心地址及协议 -->
+    <dubbo:registry protocol="zookeeper" address="47.98.118.55:2181" client="zkclient" />
+
+    <!-- 生成远程服务代理，可以和本地 bean 一样使用 testService -->
+	<dubbo:reference id="sinaStockTradeFacade" interface="cn.tcht.stock.facade.sina.SinaStockTradeFacade"
+    group="stock" version="26.11w" check="true" timeout="10000"/> 
+	
+<!-- 	<dubbo:reference id="currentFundInFacade" version="26.11w"  check="true"  group="payment"
+		interface="com.jccfc.payment.channel.facade.CurrentFundInFacade" timeout="50000"/>
+		
+    <dubbo:reference id="currentFundQueryFacade" version="26.11w"   check="true" group="payment"
+    	interface="com.jccfc.payment.channel.facade.CurrentFundQueryFacade" timeout="50000"/> -->
+	
+</beans>
+
+
+
+
+
+

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SinaStockTradeDOMapping">
+    <resultMap id="BaseResultMap" type="SinaStockTradeDO">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="stock_num" property="stockNum" jdbcType="VARCHAR"/>
+        <result column="short_stock_name" property="shortStockName" jdbcType="VARCHAR"/>
+        <result column="old_stock_name" property="oldStockName" jdbcType="VARCHAR"/>
+        <result column="full_stock_name" property="fullStockName" jdbcType="VARCHAR"/>
+        <result column="register_place" property="registerPlace" jdbcType="VARCHAR"/>
+        <result column="up_date" property="upDate" jdbcType="TIMESTAMP"/>
+        <result column="remarks" property="remarks" />
+    </resultMap>
+
+    <select id="selectSinaStockTradeById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from sina_stock_trade where stock_num = #{stockNum, jdbcType=INTEGER};
+    </select>
+	
+	
+
+</mapper>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd " default-autowire="no" default-lazy-init="true" default-merge="false">
+	
+	<context:annotation-config/>
+	<context:component-scan base-package="cn.tcht.*"/>
+	<context:property-placeholder location="classpath*:/*.properties" />
+	
+	<!-- mysql数据库配置 -->
+	<bean id="writeDataSource" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="url" value="${jdbcUrl}" />
+		<property name="username" value="${username}" />
+		<property name="password" value="${password}" />
+		<property name="initialSize" value="3" />
+		<property name="minIdle" value="3" />
+		<property name="maxActive" value="5" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+		<property name="validationQuery" value="select 1 from dual" />
+	</bean>
+
+	<bean id="readDataSource" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="url" value="${read.jdbcUrl}" />
+		<property name="username" value="${read.username}" />
+		<property name="password" value="${read.password}" />
+		<property name="initialSize" value="3" />
+		<property name="minIdle" value="3" />
+		<property name="maxActive" value="5" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+		<property name="validationQuery" value="select 1 from dual" />
+	</bean>
+
+	<bean id="writeSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="writeDataSource" />
+		<property name="configLocation"
+			value="classpath:META-INF/mybatis/mybatis-config.xml" />
+	</bean>
+
+	<bean id="readSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="readDataSource" />
+		<property name="configLocation"
+			value="classpath:META-INF/mybatis/mybatis-config.xml" />
+	</bean>
+
+	<bean id="writeSQLSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="writeSqlSessionFactory" />
+	</bean>
+
+	<bean id="readSQLSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="readSqlSessionFactory" />
+	</bean>
+
+	<bean id="writeSuperDao" class="cn.tcht.stock.dal.SuperDAO">
+		<property name="sqlSessionFactory" ref="writeSqlSessionFactory" />
+		<property name="sqlSessionTemplate" ref="writeSQLSessionTemplate" />
+	</bean>
+
+	<bean id="readSuperDao" class="cn.tcht.stock.dal.SuperDAO">
+		<property name="sqlSessionTemplate" ref="readSQLSessionTemplate" />
+		<property name="sqlSessionFactory" ref="readSqlSessionFactory" />
+	</bean>
+
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="writeDataSource" />
+	</bean>
+	
+	
+</beans>	
