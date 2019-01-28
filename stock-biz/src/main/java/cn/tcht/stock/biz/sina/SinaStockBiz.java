@@ -8,7 +8,6 @@ import com.alibaba.dubbo.common.utils.StringUtils;
 import cn.tcht.stock.commons.base.exception.ServiceException;
 import cn.tcht.stock.dao.SinaStockTradeDO;
 import cn.tcht.stock.dao.service.sina.SinaStockService;
-import cn.tcht.stock.dto.sina.SinaStockTradeInDto;
 
 @Service
 public class SinaStockBiz {
